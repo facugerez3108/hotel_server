@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int      @id @default(autoincrement())
+  email           String   @unique
+  name            String?
+  lastname        String
+  password        String
+  role            Role     @default(USER)
+  isEmailVerified Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  Token           Token[]
+}
+
+model Token {
+  id          Int       @id @default(autoincrement())
+  token       String
+  type        TokenType
+  expires     DateTime
+  blacklisted Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+}
+
+model Image {
+  id        Int      @id @default(autoincrement())
+  fileName  String
+  filePath  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Cateogry {
+  id    Int  @id @default(autoincrement())
+  title   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  habitacion Habitacion @relation(fields: [habitacionId], references: [id])
+  habitacionId  Int
+}
+
+model Habitacion {
+  id Int @id @default(autoincrement())
+  description String
+  disponibilidad Boolean
+  precio Decimal
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  Category Cateogry[]
+  Nivel Nivel[]
+  Cliente Cliente[]
+}
+
+model Nivel {
+  id Int @id @default(autoincrement())
+  title  String
+  habitacionId  Int
+  habitacion  Habitacion @relation(fields: [habitacionId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Caja {
+  id  Int @id @default(autoincrement())
+  mto_apertura Decimal
+  dro_hospedamiento Decimal
+  dro_ventas Decimal
+  dro_cierre Decimal
+  fecha_apertura DateTime
+  hora_apertura DateTime
+  fecha_cierre DateTime
+  hora_cierre DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Cliente {
+  id Int @id @default(autoincrement())
+  name String
+  lastname String
+  dni Int
+  razon_visita String
+  nro_telefono String
+  email String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  habitacionId Int
+  habitacion Habitacion @relation(fields: [habitacionId], references: [id])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum TokenType {
+  ACCESS
+  REFRESH
+  RESET_PASSWORD
+  VERIFY_EMAIL
+}
