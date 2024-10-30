@@ -46,13 +46,12 @@ model Image {
   updatedAt DateTime  @updatedAt
 }
 
-model Cateogry {
+model Category {
   id    Int  @id @default(autoincrement())
-  title   String
+  title   String @unique
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  habitacion Habitacion @relation(fields: [habitacionId], references: [id])
-  habitacionId  Int
+  Habitacion Habitacion[]
 }
 
 model Habitacion {
@@ -62,16 +61,17 @@ model Habitacion {
   precio Decimal
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  Category Cateogry[]
-  Nivel Nivel[]
+  category Category @relation(fields: [categoryId], references: [id])
+  categoryId  Int
+  nivel   Nivel @relation(fields: [nivelId], references: [id])
+  nivelId Int
   Cliente Cliente[]
 }
 
 model Nivel {
   id Int @id @default(autoincrement())
-  title  String
-  habitacionId  Int
-  habitacion  Habitacion @relation(fields: [habitacionId], references: [id])
+  title  String @unique
+  Habitacion Habitacion[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
