@@ -4,3 +4,6 @@ export {default as authService} from './auth.services';
 export {default as emailService} from './email.services';
 export {default as categoryService} from './category.services';
 export {default as nivelService} from './nivel.services';
+export {default as clientService} from './huesped.services';
+export {default as productService} from './product.service';
+export {default as categoryProductService} from './category.product.service'; 

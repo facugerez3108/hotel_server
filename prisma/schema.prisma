@@ -104,6 +104,27 @@ model Cliente {
   habitacion Habitacion @relation(fields: [habitacionId], references: [id])
 }
 
+model Product {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  code String @unique
+  price Decimal
+  stock Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  category_product_id Int 
+  category_product Category_Product @relation(fields: [category_product_id], references: [id])
+}
+
+model Category_Product {
+  id Int @id @default(autoincrement())
+  title String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Product Product[]
+}
+
 enum Role {
   USER
   ADMIN

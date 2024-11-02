@@ -1,43 +1,44 @@
 import httpStatus from "http-status";
 import ApiError from "../utils/ApiError";
-import { Category, Prisma } from "@prisma/client";
+import { Category_Product, Prisma } from "@prisma/client";
 import prisma from "../client";
 
-const createCategory = async (
-    title: string,
-): Promise<Category> => {
-    if(await getCategoryByTitle(title)){
+
+const createCategoryProduct = async (
+    title: string
+): Promise<Category_Product> => {
+    if(await getCategoryProductByTitle(title)){
         throw new ApiError(httpStatus.BAD_REQUEST, 'Category already exists')
     }
 
-    return prisma.category.create({
+    return prisma.category_Product.create({
         data: {
             title,
         }
     })
 }
 
-const getCategoryByTitle = async <Key extends keyof Category>(
+const getCategoryProductByTitle = async <Key extends keyof Category_Product>(
     title: string,
     keys: Key[] = ['id', 'title', 'createdAt', 'updatedAt'] as Key[]
-): Promise<Pick<Category, Key> | null> => {
-    return prisma.category.findUnique({
+): Promise<Pick<Category_Product, Key> | null> => {
+    return prisma.category_Product.findUnique({
         where: { title },
         select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
-    }) as Promise<Pick<Category, Key> | null>;
+    }) as Promise<Pick<Category_Product, Key> | null>;
 }
 
-const getCategoryById = async <Key extends keyof Category>(
+const getCategoryProductById = async <Key extends keyof Category_Product>(
     id: number,
     keys: Key[] = ['id', 'title', 'createdAt', 'updatedAt'] as Key[]
-): Promise<Pick<Category, Key> | null> => {
-    return prisma.category.findUnique({
+): Promise<Pick<Category_Product, Key> | null> => {
+    return prisma.category_Product.findUnique({
         where: { id },
         select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
-    }) as Promise<Pick<Category, Key> | null>;
+    }) as Promise<Pick<Category_Product, Key> | null>;
 }
 
-const queryCategories = async <Key extends keyof Category>(
+const queryCategoriesProduct = async <Key extends keyof Category_Product>(
     filter: object = {},
     options: {
         limit? : number;
@@ -51,13 +52,13 @@ const queryCategories = async <Key extends keyof Category>(
         'createdAt',
         'updatedAt',
     ] as Key[]
-): Promise<Pick<Category, Key>[]> => {
+): Promise<Pick<Category_Product, Key>[]> => {
     const page = options.page ?? 1;
     const limit = options.limit ?? 10;
     const sortBy = options.sortBy;
     const sortType = options.sortType ?? 'desc';
 
-    const categories = await prisma.category.findMany({
+    const categories = await prisma.category_Product.findMany({
         where: Object.keys(filter).length ? filter : {},
         select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
         skip: (page - 1) * limit,
@@ -65,47 +66,46 @@ const queryCategories = async <Key extends keyof Category>(
         orderBy: sortBy ? { [sortBy]: sortType } : undefined
     });
 
-    return categories as Pick<Category, Key>[];
+    return categories as Pick<Category_Product, Key>[];
 }
 
-const updateCategory = async <Key extends keyof Category> (
+const updateCategoryProduct = async <Key extends keyof Category_Product> (
     id: number,
-    updateBody: Prisma.CategoryUpdateInput,
+    updateBody: Prisma.Category_ProductUpdateInput,
     keys: Key[] = ['title'] as Key[]
-): Promise<Pick<Category, Key> | null> => {
-    const category = await getCategoryById(id, ['id', 'title']);
+): Promise<Pick<Category_Product, Key> | null> => {
+    const category = await getCategoryProductById(id, ['id', 'title']);
     if (!category) {
         throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
     }
     
-    const updateCategory = await prisma.category.update({
+    const updateCategory = await prisma.category_Product.update({
         where: { id: category.id },
         data: updateBody,
         select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {})
     })
 
-    return updateCategory as Pick<Category, Key> | null;
+    return updateCategory as Pick<Category_Product, Key> | null;
 }
 
-const deleteCategory = async (
+const deleteCategoryProduct = async (
     id: number
-): Promise<Category> => {
-    const category = await getCategoryById(id);
+): Promise<Category_Product> => {
+    const category = await getCategoryProductById(id);
     if (!category) {
         throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
     }
 
-    return prisma.category.delete({
+    return prisma.category_Product.delete({
         where: { id }
     })
 }
 
-
 export default {
-    createCategory,
-    getCategoryById,
-    getCategoryByTitle,
-    queryCategories,
-    updateCategory,
-    deleteCategory
+    createCategoryProduct,
+    getCategoryProductByTitle,
+    getCategoryProductById,
+    queryCategoriesProduct,
+    updateCategoryProduct,
+    deleteCategoryProduct
 }

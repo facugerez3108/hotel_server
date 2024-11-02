@@ -43,3 +43,11 @@ const deleteNivel = catchAsync(async(req, res) => {
     await nivelService.deleteNivel(nivelId);
     res.status(httpStatus.NO_CONTENT).send();
 })
+
+export default {
+    createNivel,
+    getNiveles,
+    getNivel,
+    updateNivel,
+    deleteNivel
+}
