@@ -13,6 +13,7 @@ import config from '../config/config';
  */
 const createUser = async (
   name: string,
+  lastname: string,
   email: string,
   password: string,
   role: Role = 'USER'
@@ -23,6 +24,7 @@ const createUser = async (
   return prisma.user.create({
     data: {
       name,
+      lastname,
       email,
       password: await encryptPassword(password),
       role

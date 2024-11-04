@@ -14,6 +14,7 @@ const loginUserWithEmailAndPassword = async (email: string, password: string): P
         'id',
         'email',
         'name',
+        'lastname',
         'password',
         'role',
         'isEmailVerified',

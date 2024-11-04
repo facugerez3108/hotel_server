@@ -6,4 +6,5 @@ export {default as categoryService} from './category.services';
 export {default as nivelService} from './nivel.services';
 export {default as clientService} from './huesped.services';
 export {default as productService} from './product.service';
-export {default as categoryProductService} from './category.product.service'; 
+export {default as categoryProductService} from './category.product.service';
+export {default as cajaServices} from './caja.services'; 

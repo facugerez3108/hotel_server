@@ -23,6 +23,7 @@ model User {
   isEmailVerified Boolean  @default(false)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  Caja            Caja[]
   Token           Token[]
 }
 
@@ -86,8 +87,11 @@ model Caja {
   hora_apertura DateTime
   fecha_cierre DateTime
   hora_cierre DateTime
+  userId Int
+  user  User @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  status   CajaStatus
 }
 
 model Cliente {
@@ -128,6 +132,11 @@ model Category_Product {
 enum Role {
   USER
   ADMIN
+}
+
+enum CajaStatus {
+  CERRADA
+  ABIERTA
 }
 
 enum TokenType {
